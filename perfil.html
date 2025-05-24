@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mi Perfil</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background-color: #0d0d0d;
+      color: white;
+      padding: 30px;
+      margin: 0;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .perfil {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .perfil img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: 2px solid #ff6600;
+    }
+
+    .perfil-info span {
+      display: block;
+      color: #ffa64d;
+      font-size: 0.9rem;
+    }
+
+    h1 {
+      color: #ff6600;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .mod-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .mod {
+      background-color: #1a1a1a;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 10px #ff6600;
+    }
+
+    .mod img {
+      max-width: 100%;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+
+    .mod h2 {
+      margin: 10px 0 5px;
+      font-size: 1.2rem;
+      color: #ff6600;
+    }
+
+    .mod p {
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+
+    .mod a {
+      color: #ff6600;
+      text-decoration: none;
+    }
+
+    .mod a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Mi Perfil</h1>
+    <div class="perfil" id="perfilUsuario">
+      <!-- Insertado por JS -->
+    </div>
+  </header>
+
+  <div class="mod-list" id="misMods"></div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem('usuario'));
+    if (!user) {
+      alert('Debes iniciar sesión');
+      window.location.href = 'index.html';
+    }
+
+    document.getElementById('perfilUsuario').innerHTML = `
+      <img src="${user.profileImage}" alt="Perfil">
+      <div class="perfil-info">
+        <span>${user.username}</span>
+        <span>${user.email}</span>
+      </div>
+    `;
+
+    const todosMods = JSON.parse(localStorage.getItem('mods') || '[]');
+    const misMods = todosMods.filter(mod => mod.email === user.email);
+    const contenedor = document.getElementById('misMods');
+
+    if (misMods.length === 0) {
+      contenedor.innerHTML = '<p style="text-align:center;">No has subido ningún mod.</p>';
+    } else {
+      misMods.forEach(mod => {
+        const div = document.createElement('div');
+        div.className = 'mod';
+        div.innerHTML = `
+          <img src="${mod.imagen}" alt="${mod.titulo}">
+          <h2>${mod.titulo}</h2>
+          <p>${mod.juego}</p>
+          <a href="${mod.descarga}" target="_blank">Descargar</a>
+        `;
+        contenedor.appendChild(div);
+      });
+    }
+  </script>
+</body>
+</html>
